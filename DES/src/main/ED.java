@@ -18,7 +18,7 @@ public class ED {
 	private String[] textToRead;
 	private StringBuilder sb = new StringBuilder("");
 	private StringBuilder OKLM = new StringBuilder("");
-	private File file = new File("src/output");
+	private File file;
 	
 	public ED(Input input) {
 		this.input = input;
@@ -26,6 +26,10 @@ public class ED {
 	}
 	protected void encrypt() throws IOException {
 		if(setEncryptionSettings()){
+			setFilePath();
+			if(!(file.exists())) {
+				file = new File("src/output");
+			}
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter pw = new PrintWriter(bw);
@@ -39,7 +43,7 @@ public class ED {
 			pw.close();
 			bw.close();
 			fw.close();
-			JOptionPane.showMessageDialog(null, "Encrypted file in \"src/output\"");
+			JOptionPane.showMessageDialog(null, "Encrypted file in "+file.getAbsolutePath());
 		
 		
 	
@@ -58,6 +62,32 @@ public class ED {
 		if(addition==-1)
 			return false;
 		return true;
+		
+	}
+	private void setFilePath() {
+		String s;
+		String base = "src/output";
+		boolean b = true;
+		do {	
+				s=JOptionPane.showInputDialog(null,"Enter Output File Path\nEmpty for default: "+base);
+				if(s==null||s=="") {
+					file = new File("src/output");b =false;			
+				}
+					
+				else {
+					file = new File(s);b =false;
+				}
+				try {
+					if(!(file.exists())) {
+						file.createNewFile();
+					}
+				}catch(Exception e) {
+					
+				}
+					
+				
+		
+		}while(b);	
 		
 	}
 	private int getInt(int base, String s) {
@@ -103,9 +133,12 @@ public class ED {
 		
 	}
 	protected void decrypt() throws IOException {
-		
-		
+			
 		if(setDecryptionSettings()) {
+			setFilePath();
+			if(!(file.exists())) {
+				file = new File("src/output");
+			}
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter pw = new PrintWriter(bw);
@@ -117,7 +150,7 @@ public class ED {
 			pw.close();
 			bw.close();
 			fw.close();
-			JOptionPane.showMessageDialog(null, "Decrypted file in \"src/output\"");
+			JOptionPane.showMessageDialog(null, "Decrypted file in "+file.getAbsolutePath());
 		
 		}
 	}
@@ -145,7 +178,6 @@ public class ED {
 		return true;
 	}
 	private void decryptLine(String s) {
-		System.out.println("BRISA"+space);
 		sb = new StringBuilder(s);
 		OKLM.setLength(0);
 		while(sb.length()!=0) {
