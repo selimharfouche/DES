@@ -16,8 +16,8 @@ public class ED {
 	private Random rnd = new Random();
 	private String key = null;
 	private String[] textToRead;
-	private StringBuilder sb = new StringBuilder();
-	private StringBuilder OKLM = new StringBuilder();
+	private StringBuilder sb = new StringBuilder("");
+	private StringBuilder OKLM = new StringBuilder("");
 	private File file = new File("src/output");
 	
 	public ED(Input input) {
@@ -25,47 +25,62 @@ public class ED {
 		textToRead = input.getTextToRead();
 	}
 	protected void encrypt() throws IOException {
-		setEncryptionSettings();
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
-		PrintWriter pw = new PrintWriter(bw);
-		pw.println("Key: "+getKey());
-		for (String s : textToRead) {
-			encryptLine(s);
-			s = sb.toString();
-			pw.println(s);
-			
-		}
-		pw.close();
-		bw.close();
-		fw.close();
-		JOptionPane.showMessageDialog(null, "Encrypted file in \"src/output\"");
-	
+		if(setEncryptionSettings()){
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter pw = new PrintWriter(bw);
+			pw.println("Key: "+getKey());
+			for (String s : textToRead) {
+				encryptLine(s);
+				s = sb.toString();
+				pw.println(s);
+				
+			}
+			pw.close();
+			bw.close();
+			fw.close();
+			JOptionPane.showMessageDialog(null, "Encrypted file in \"src/output\"");
 		
+		
+	
+		}
 		
 		
 	}
-	private void setEncryptionSettings() {
+	private boolean setEncryptionSettings() {
 		space = getInt(1,"Number of Spaces");
+		if(space==-1)
+			return false;
 		upperLimit = getInt(500, "Random character upper limit");
+		if(upperLimit==-1)
+			return false;
 		addition = getInt(15000,"Character addition");
+		if(addition==-1)
+			return false;
+		return true;
+		
 	}
 	private int getInt(int base, String s) {
+		boolean b = true;
 		do {
 			try {
-				s=JOptionPane.showInputDialog(null,s +"\nrecommended: "+base);
+				s=JOptionPane.showInputDialog(null,s +"\nEmpty for default: "+base);
 				base = Integer.parseInt(s);
-				break;
+				if(base>0)
+					break;
+				
 			}catch (NumberFormatException e) {
-				if(s==null);
-				return base;
+				if(s==null)	
+					return -1;b =false;
+				if(s=="")
+					return base;b =false;
+				
+				
+					
 			}
 			
 			
-		}while(true);
-		
-	
-		
+		}while(b);	
 		return base;
 	}
 	private void encryptLine (String s) {
@@ -88,22 +103,25 @@ public class ED {
 		
 	}
 	protected void decrypt() throws IOException {
-		setDecryptionSettings();
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
-		PrintWriter pw = new PrintWriter(bw);
-		for (String s : textToRead) {
-			decryptLine(s);
-			s = OKLM.toString();
-			pw.println(s);
-		}
-		pw.close();
-		bw.close();
-		fw.close();
-		JOptionPane.showMessageDialog(null, "Decrypted file in \"src/output\"");
 		
+		
+		if(setDecryptionSettings()) {
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			PrintWriter pw = new PrintWriter(bw);
+			for (String s : textToRead) {
+				decryptLine(s);
+				s = OKLM.toString();
+				pw.println(s);
+			}
+			pw.close();
+			bw.close();
+			fw.close();
+			JOptionPane.showMessageDialog(null, "Decrypted file in \"src/output\"");
+		
+		}
 	}
-	private void setDecryptionSettings() {
+	private boolean setDecryptionSettings() {
 		Boolean b = true;
 		String key = null;
 		
@@ -116,32 +134,47 @@ public class ED {
 					b =false;
 				
 			}catch(NullPointerException e) {
-				e.printStackTrace();
+				if(key == null)
+					return false;
 			}
 			
 		}
-		space = (int)key.charAt(4) -(int)(key.charAt(7));
 		
+		space = (int)key.charAt(10) -15000;
+		
+		return true;
 	}
 	private void decryptLine(String s) {
+		System.out.println("BRISA"+space);
 		sb = new StringBuilder(s);
 		OKLM.setLength(0);
 		while(sb.length()!=0) {
+			if(s.equals(""))
+				break;
+			
 			addition = (int)sb.charAt(0);
 			sb.delete(0, space);
+			
 			OKLM.append(Character.toString((char)(Math.abs(addition-(int)sb.charAt(0)))));
+			
+			
 			sb.delete(0,1);
+			
+			
 		}
 	}
 	private void setKey() {
-		for (int i =0;i<10;i++)
-			OKLM.append((char)rnd.nextInt(16000));
-		OKLM.setCharAt(4,(char)(space+(int)OKLM.charAt(7)));
-		key = OKLM.toString();
+		for (int i =0;i<10;i++) {
+			OKLM.append((char)(rnd.nextInt(500)+15000));
+		}
+		OKLM.append((char)(15000+space));
+		
+		
+		
 	}
 	private String getKey() {
 		setKey();
-		return key;
+		return OKLM.toString();
 	}
 	
 	

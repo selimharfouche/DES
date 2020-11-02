@@ -28,16 +28,31 @@ public class Input {
 	}
 	
 	private void getInput() {
-		String userCase;
-		
-		
+		int userCase;
+		String s=null;
+		boolean b = true;
 		do {
-			userCase = JOptionPane.showInputDialog(null,"1 - Enter your text\n2- Text File");
-		}while(!(userCase.equals("1")||userCase.equals("2")));
-		if (userCase.equals("1"))
-			getConsole();
-		else
-			getFile();
+			try {
+				s=JOptionPane.showInputDialog(null,"1 - Enter your text\n2- Text File");
+				userCase = Integer.parseInt(s);
+				if (userCase==1)
+					getConsole();b=false;
+				
+				if (userCase==2)
+					getFile();b=false;
+
+		
+			}catch (NumberFormatException e) {
+				if(s==null)	
+					b =false;
+				if(s=="")
+					b =false;		
+					
+			}
+			
+			
+		}while(b);	
+	
 		
 	}
 	private void getConsole() {
@@ -50,8 +65,7 @@ public class Input {
 		
 			s = JOptionPane.showInputDialog(null,"Enter valid text");
 		}
-		System.out.println("Enter your text");
-		do {
+				do {
 			list.add(s);
 			s =JOptionPane.showInputDialog(null,"Enter your text , cancel to stop");
 			
