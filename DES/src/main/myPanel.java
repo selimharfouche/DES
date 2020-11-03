@@ -33,12 +33,14 @@ public class myPanel extends JPanel{
 				if(!b)
 					JOptionPane.showMessageDialog(null, "Set Input First");
 				else {
+					b=false;
 					try {
 						ed.encrypt();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 				}
 			}
 			
@@ -50,12 +52,14 @@ public class myPanel extends JPanel{
 				if(!b)
 					JOptionPane.showMessageDialog(null, "Set Input First");
 				else {
+					b=false;
 					try {
 						ed.decrypt();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					
 				}
 			}
 			

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class ED {
+	private boolean booba =false;
 	private char[] arr;
 	private int space, upperLimit, addition;
 	private Input input;
@@ -27,6 +28,8 @@ public class ED {
 	protected void encrypt() throws IOException {
 		if(setEncryptionSettings()){
 			setFilePath();
+			
+			
 			if(!(file.exists())) {
 				file = new File("src/output");
 			}
@@ -88,6 +91,7 @@ public class ED {
 				
 		
 		}while(b);	
+		booba =true;
 		
 	}
 	private int getInt(int base, String s) {
@@ -145,6 +149,7 @@ public class ED {
 			for (String s : textToRead) {
 				decryptLine(s);
 				s = OKLM.toString();
+				System.out.println(s);
 				pw.println(s);
 			}
 			pw.close();
